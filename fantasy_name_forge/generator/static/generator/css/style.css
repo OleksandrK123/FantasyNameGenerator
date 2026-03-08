@@ -1,0 +1,232 @@
+body {
+            font-family: 'Segoe UI', 'Verdana', sans-serif;
+            background: #1a1a1a;
+            color: #eee;
+            text-align: center;
+            padding: 50px;
+        }
+
+.centered-generator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 600px;
+}
+
+#generate-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#category-select {
+    padding: 6px 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+#generate-form button {
+    padding: 8px 16px;
+    font-size: 16px;
+    border-radius: 6px;
+    background-color: #00ffcc;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#generate-form button:hover {
+    background-color: #00ddb3;
+}
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 600px;
+}
+
+#race-filter {
+    margin-bottom: 20px;
+    padding: 6px 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.name-box {
+    background: #1e1e1e;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px auto;
+    max-width: 500px;
+    box-shadow: 0 0 6px #00ffcc33;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.name-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.name-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #00ffcc;
+    flex: 1;
+}
+
+.race-tag {
+    font-size: 16px;
+    color: #aaa;
+    margin-left: 10px;
+}
+
+.timestamp {
+    font-size: 14px;
+    color: #666;
+    margin-left: auto;
+}
+
+
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        ul.recent-names {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul.recent-names li {
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .timestamp {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .favorite-form {
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.name-box.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.name-box.fade-in {
+    animation: fadeIn 0.5s ease-out;
+    margin: 10px 0;
+    padding: 10px;
+    background: #1e1e1e;
+    border-radius: 6px;
+    box-shadow: 0 0 5px #00ffcc33;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.name-box.fade-in {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.power-meter {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #00ffcc;
+    text-shadow: 0 0 4px #00ffcc88;
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from { transform: scale(1); opacity: 0.8; }
+    to   { transform: scale(1.05); opacity: 1; }
+}
+
+.power-status {
+    margin-left: 10px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.status-weak {
+    background-color: #444;
+    color: #ccc;
+}
+
+.status-rare {
+    background-color: #2a6;
+    color: #fff;
+}
+
+.status-epic {
+    background-color: #06c;
+    color: #fff;
+    box-shadow: 0 0 6px #06c88;
+}
+
+.status-legendary {
+    background-color: #c0f;
+    color: #fff;
+    box-shadow: 0 0 8px #c0f88;
+}
+
+.legendary-glow {
+    background: linear-gradient(90deg, #c0f, #60f, #c0f);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    box-shadow: 0 0 12px #c0f, 0 0 24px #c0f88;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: 200px 0; }
+}

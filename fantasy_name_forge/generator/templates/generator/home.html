@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Fantasy Name Forge</title>
+    <link rel="stylesheet" href="{% static 'generator/css/style.css' %}?v=2">
+</head>
+<body>
+    <h1>🧙‍♂️ Fantasy Name Forge</h1>
+
+    {% if not user.is_authenticated %}
+    <p>
+        <a href="{% url 'login' %}">🔐 Login</a> |
+        <a href="{% url 'register' %}">📝 Sign up</a>
+    </p>
+    {% else %}
+    <p>
+        👋 Hello, {{ user.username }} |
+        <a href="{% url 'logout' %}">🚪 Logout</a> |
+        <a href="{% url 'my_favorites' %}">🌟 My Names</a>
+    </p>
+    {% endif %}
+
+    <div class="centered-generator">
+        <form id="generate-form">
+            <label for="category-select">Choose race:</label>
+            <select name="category" id="category-select">
+                {% for category in categories %}
+                    {% if category.name != 'Legendary' %}
+                        <option value="{{ category.name }}">{{ category.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <button type="submit">⚡ Generate</button>
+        </form>
+
+        <div id="spinner" style="display: none;">⏳ Generating...</div>
+        <div id="names-container"></div>
+
+        <div class="power-meter">
+        🔮 The power of a name: <span id="power-score">—</span>
+            <span id="power-status" class="power-status">—</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="centered-content">
+        <h2>📜 History of the last 50 names</h2>
+        <label for="race-filter">Filter by race:</label>
+        <select id="race-filter">
+            <option value="">All races</option>
+            {% for cat in categories %}
+                <option value="{{ cat.name }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+
+        <div id="recent-names-container"></div>
+    </div>
+
+    <script src="{% static 'generator/js/main.js' %}"></script>
+</body>
+</html>
