@@ -7,9 +7,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.middleware.csrf import get_token
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import FantasyNameSerializer
 
 # Create your views here.
-# Префиксы суфиксы и тд
+# Prefixes, suffixes, etc.
 NAME_PARTS = {
     'Elf': {
         'prefixes': ['El', 'Ari', 'Luth', 'Syl', 'Faer', 'Nim', 'Thal', 'Elen', 'Isil', 'Ser'],
@@ -36,7 +39,22 @@ NAME_PARTS = {
         'prefixes': ['Xar', 'Vel', 'Nyx', 'Thaur', 'Zar', 'Quor', 'Elyr', 'Draz'],
         'roots': ['veth', 'mirg', 'zul', 'aeth', 'nex', 'syg', 'vrax', 'morg'],
         'suffixes': ['ion', 'azul', 'orim', 'thul', 'aaz', 'ethar', 'xen', 'ul']
-    }
+    },
+
+    'Dwarf': {
+        'prefixes': [
+            'Dur', 'Thra', 'Brom', 'Gim', 'Kaz',
+            'Thor', 'Bald', 'Grim', 'Dwal', 'Rag'
+    ],
+        'roots': [
+            'gar', 'drum', 'rak', 'barr', 'grom',
+            'dorn', 'fund', 'marr', 'kuld', 'thrak'
+    ],
+        'suffixes': [
+            'in', 'ar', 'orn', 'grin', 'dun',
+            'rak', 'mir', 'gar', 'drik', 'son'
+    ]
+}
 
 }
 
@@ -50,6 +68,12 @@ def generate_name(category_name):
             random.choice(parts["roots"]) +
             random.choice(parts["suffixes"])
     )
+def cleanup_old_names(limit=50):
+    """Keeps only the latest N names in the database."""
+    extra_ids = FantasyName.objects.order_by('-created_at').values_list('id', flat=True)[limit:]
+    if extra_ids:
+        FantasyName.objects.filter(id__in=extra_ids).delete()
+
 
 
 def home(request):
@@ -57,34 +81,31 @@ def home(request):
     category = None
     favorites = None
 
-    # Показываем избранное только авторизованным
-    if request.user.is_authenticated:
-        favorites = FavoriteName.objects.filter(user=request.user).order_by('-added_at')
+    # Showing favorites only to authorized users
 
-    # Обработка генерации имени
+    favorites = request.user.favorites.order_by('-added_at') if request.user.is_authenticated else None
+
+    # Handling name generation
     if request.method == 'POST':
         category_name = request.POST.get('category')
         category = NameCategory.objects.filter(name=category_name).first()
         if category:
             generated = generate_name(category.name)
-            name = [generated]  # ← обернули в список
+            name = [generated]  # ← wrapped in a list
             FantasyName.objects.create(name=generated, category=category)
+            cleanup_old_names()  # Clean up using our helper
 
-            # Удаляем всё, кроме последних 50
-            extra_ids = FantasyName.objects.order_by('-created_at').values_list('id', flat=True)[50:]
-            FantasyName.objects.filter(id__in=extra_ids).delete()
+
 
     categories = NameCategory.objects.all()
     filter_category = request.GET.get('filter')
 
-    # История последних 50 имён
+    # History of the last 50 names
+    recent_names = FantasyName.objects.select_related('category').order_by('-created_at')
     if filter_category:
-        recent_names = FantasyName.objects.select_related('category') \
-                           .filter(category__name=filter_category) \
-                           .order_by('-created_at')[:50]
-    else:
-        recent_names = FantasyName.objects.select_related('category') \
-                           .order_by('-created_at')[:50]
+        recent_names = recent_names.filter(category__name=filter_category)
+
+        recent_names = recent_names[:50]
 
     return render(request, 'generator/home.html', {
         'names': name,
@@ -143,7 +164,7 @@ def generate_name_ajax(request):
         if legendary:
             category = legendary
 
-    # Генерируем имя
+    # Generating a name
     parts = NAME_PARTS.get(category.name)
     if not parts:
         return JsonResponse({'error': f'No name parts for category {category.name}'}, status=500)
@@ -155,10 +176,11 @@ def generate_name_ajax(request):
 
     is_legendary = category.name == 'Legendary'
 
-    # Сохраняем в базу
+    # Save to the database
     FantasyName.objects.create(name=generated, category=category)
 
-    # Удаляем старые, оставляем 50
+    #
+    # delete the old ones, leaving 50
     extra_ids = FantasyName.objects.order_by('-created_at') \
                     .values_list('id', flat=True)[50:]
     FantasyName.objects.filter(id__in=extra_ids).delete()
@@ -190,3 +212,13 @@ def get_recent_names_ajax(request):
         for n in names
     ]
     return JsonResponse({'names': data})
+
+
+@api_view(['GET'])
+def recent_names_api(request):
+    """
+    API endpoint that returns last 50 generated names.
+    """
+    names = FantasyName.objects.select_related('category').order_by('-created_at')[:50]
+    serializer = FantasyNameSerializer(names, many=True)
+    return Response(serializer.data)

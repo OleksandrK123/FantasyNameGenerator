@@ -8,4 +8,5 @@ urlpatterns = [
     path('my-names/', views.my_favorites, name='my_favorites'),
     path('ajax/generate-name/', views.generate_name_ajax, name='generate_name_ajax'),
     path("ajax/recent-names/", views.get_recent_names_ajax, name="get_recent_names_ajax"),
+    path('api/recent/', views.recent_names_api, name='recent_names_api'),
 ]
