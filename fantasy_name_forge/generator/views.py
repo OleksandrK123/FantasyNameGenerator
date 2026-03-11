@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 import random
+
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import NameCategory, FantasyName, FavoriteName
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, login
@@ -153,6 +156,7 @@ def my_favorites(request):
 
 
 @require_POST
+@csrf_exempt
 def generate_name_ajax(request):
     category_name = request.POST.get('category')
     category = NameCategory.objects.filter(name=category_name).first()
