@@ -55,4 +55,9 @@ Endpoint: /api/recent/
 
 Method: GET
 
+Docker Deployment
+The project is fully containerized. To run it locally:
+1. Clone the repository.
+2. Run `docker-compose up --build`.
+3. Access the app at `http://localhost:8000`.
 Response: JSON list of name objects.
