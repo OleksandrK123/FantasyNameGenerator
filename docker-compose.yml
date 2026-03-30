@@ -6,9 +6,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=my_django_db
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=topsecret_pass
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
 
   web:
     build: .
@@ -19,9 +19,9 @@ services:
       - "8000:8000"
     environment:
       - DEBUG=1
-      - DB_NAME=my_django_db
-      - DB_USER=admin
-      - DB_PASSWORD=topsecret_pass
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=db
       - DB_PORT=5432
     depends_on:
