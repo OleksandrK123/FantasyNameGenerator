@@ -1,0 +1,72 @@
+<style>
+    body {
+        font-family: 'Segoe UI', 'Verdana', sans-serif;
+        background: #121212;
+        color: #eee;
+        text-align: center;
+        padding: 40px;
+    }
+
+    h2 {
+        font-size: 32px;
+        color: #00ffcc;
+        margin-bottom: 30px;
+    }
+
+    .favorites-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .favorite-card {
+        background: #1e1e1e;
+        border: 1px solid #333;
+        border-radius: 10px;
+        padding: 20px;
+        width: 220px;
+        box-shadow: 0 0 10px #00ffcc33;
+        transition: transform 0.3s ease;
+    }
+
+    .favorite-card:hover {
+        transform: scale(1.05);
+    }
+
+    .favorite-name {
+        font-size: 22px;
+        font-weight: bold;
+        color: #00ffcc;
+    }
+
+    .favorite-race {
+        font-size: 16px;
+        color: #aaa;
+        margin-top: 5px;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 40px;
+        color: #00ffcc;
+        text-decoration: none;
+        font-size: 18px;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<h2>🌟 My favorite names</h2>
+<ul>
+    {% for fav in favorites %}
+        <li>{{ fav.name }} ({{ fav.race }})  — added {{ fav.added_at|date:"d.m.Y H:i" }}</li>
+    {% empty %}
+        <li>Nothing yet. Add your first name!</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'home' %}">← Back to the generator</a>
